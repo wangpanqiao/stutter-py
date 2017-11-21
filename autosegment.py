@@ -30,6 +30,9 @@ begin = 0
 end = 0
 last = 0
 silence = True
+
+segments = []
+
 for each in song:
     total = total + each.rms
     if (num >= 19):
@@ -38,7 +41,7 @@ for each in song:
         if (average > 150 and silence):
             silence = False
             begin = i
-        if ((average - last) > 60 and average > 50 and not silence):
+        if ((average - last) > 200 and not silence):
             begin = i
         if (average < 20 and not silence):
             silence = True
@@ -46,12 +49,21 @@ for each in song:
             seg.write(str(begin) + " ")
             seg.write(str(end) + " ")
             seg.write(str(end - begin) + "\n")
-            if (end - begin > 1000):
+            if (end - begin > 800):
                 print(str(begin) + " " + str(end))
+                segments.append((begin, end))
         last = average
         total = 0
         average = 0
     num = num + 1
     i = i + 1
-     
 
+tail = 0
+newsong = song[0]
+for each in segments:
+    print(each)
+    newsong = newsong + song[tail:each[0]]
+    newsong = newsong + song[each[0]:each[1]].speedup(playback_speed=3) * 3
+    tail = each[1]
+newsong = newsong + song[tail+1:]
+newsong.export("newbjehp.wav", format="wav")

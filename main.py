@@ -25,13 +25,17 @@ import random
 # out.export("stutter.wav", format="wav")
 
 
-# 1. Get the file path to the included audio example
-filepath = './'
-filename =filepath+'daoxiang.wav'
-# 2. Load the audio as a waveform `y`
-#    Store the sampling rate as `sr`
-y, sr = librosa.load(filename,sr=None)
-y_slow = librosa.effects.time_stretch(y, 5)
-y_slow_high = librosa.effects.pitch_shift(y_slow, sr, n_steps=1)
+# # 1. Get the file path to the included audio example
+# filepath = './'
+# filename =filepath+'daoxiang.wav'
+# # 2. Load the audio as a waveform `y`
+# #    Store the sampling rate as `sr`
+# y, sr = librosa.load(filename,sr=None)
+# y_slow = librosa.effects.time_stretch(y, 5)
+# y_slow_high = librosa.effects.pitch_shift(y_slow, sr, n_steps=1)
 
-librosa.output.write_wav('stutter_new.wav', y_slow, sr)
+# librosa.output.write_wav('stutter_new.wav', y_slow, sr)
+
+song = AudioSegment.from_wav("dog_1.wav")
+newsong = song.speedup(playback_speed=0.5)
+newsong.export("dog_slow.wav", format="wav")

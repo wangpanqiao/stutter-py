@@ -8,11 +8,15 @@ CHUNK_SIZE = 10 # 10ms per chunk
 f = open('wav.txt', 'w')
 seg = open('seg.txt', 'w')
 
-# song = AudioSegment.from_wav("bjehp.wav")
-song = AudioSegment.from_wav("frx.wav")
+song = AudioSegment.from_wav("bjehp.wav")
+# song = AudioSegment.from_wav("frx.wav")
 
 maxVolume = song.max
 number_of_frames_in_sound = song.frame_count()
+
+
+# testsong = song[number_of_frames_in_sound/300:number_of_frames_in_sound/300*2]
+# testsong.export("testsong.wav", format="wav")
 
 # print ("max volume of this song is: " + str(maxVolume)) # 23640
 # print ("number of frames in this song: " + str(number_of_frames_in_sound)) # 12996330
@@ -102,5 +106,5 @@ for each in segments:
     tail = each[1]
 newsong = newsong + song[tail+1:]
 
-# newsong.export("newbjehp.wav", format="wav")
-newsong.export("newfrx.wav", format="wav")
+newsong.export("newbjehp.wav", format="wav")
+# newsong.export("newfrx.wav", format="wav")

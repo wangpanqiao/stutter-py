@@ -7,7 +7,8 @@ import lrc_helper
 
 CHUNK_SIZE = 10 # 10ms per chunk
 
-song = AudioSegment.from_wav("bjehp.wav")
+song = AudioSegment.from_wav("pndgmcsy.wav")
+# song = AudioSegment.from_wav("bjehp.wav")
 # song = AudioSegment.from_wav("frx.wav")
 
 repeatMaxTime = 6
@@ -19,7 +20,7 @@ repeatMaxTime = 6
 segments = []
 period = 800
 
-path = "./bjehp.lrc"
+path = "./pndgmcsy.lrc"
 songLrc = lrc_helper.extract_sentence(path)
 begin = 0
 end = 0
@@ -32,7 +33,7 @@ for each in songLrc:
     words = each['words']
     sentence_start_time = each['start_time']
     for word in words:
-        if (word['time_duration'] > 2000):
+        if (word['time_duration'] > 1000):
             print(word)
             begin = sentence_start_time + word['start_time']
             end = begin + word['time_duration']
@@ -49,5 +50,5 @@ for each in segments:
     tail = each[1]
 newsong = newsong + song[tail+1:]
 
-newsong.export("newbjehp.wav", format="wav")
+newsong.export("newpndgmcsy.wav", format="wav")
 # newsong.export("newfrx.wav", format="wav")

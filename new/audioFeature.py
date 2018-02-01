@@ -7,10 +7,11 @@ class AudioFeature:
     def __init__(self, song):
         [Fs, x] = audioBasicIO.readAudioFile(song)
         F = audioFeatureExtraction.stFeatureExtraction(
-            x, Fs, 0.050 * Fs, 0.025 * Fs)
+            x, Fs, 0.10 * Fs, 0.025 * Fs)
 
         self.energy = F[1, :]
         self.spectralEntropy = F[4, :]
+        self.zcr = F[0, :]
         self.Fs = Fs
         self.x = x
         self.song = song

@@ -11,6 +11,7 @@ lastWords = []
 
 def getSentence(energy, frameNum, secondsNum):
     isSilence = True
+    framePerMs = frameNum / (secondsNum+0.0) / 1000
     for index, each in enumerate(energy):
         if (each > threshhold2 and isSilence):
             begin = index
@@ -20,7 +21,8 @@ def getSentence(energy, frameNum, secondsNum):
             if (each > threshhold1):
                 last = index
             else:
-                if (index - last > 15):
+                # 0.2s 
+                if (index - last > 200*framePerMs):
                     isSilence = True
                     end = last
                     sentences.append((begin, end))
@@ -34,9 +36,10 @@ def isTremendousRise(seq, threshhold):
 
 def getLastWordSeg(energy, frameNum, secondsNum, begin, end):
     sentence = energy[begin:end]
+    framePerMs = frameNum / (secondsNum+0.0) / 1000
     for index, each in enumerate(sentence):
-        # at least 30
-        reversedIndex = len(sentence) - 30 - index
+        # at least 0.5s
+        reversedIndex = len(sentence) - int(200*framePerMs) - index
         if (reversedIndex < 0):
             return
         seq = sentence[reversedIndex:reversedIndex+3]
@@ -69,30 +72,6 @@ def main():
 
     for each in sentences:
         getLastWordSeg(energy, frameNum, secondsNum, each[0], each[1])
-
-    # for index, each in enumerate(energy):
-    #     if (each > threshhold2 and isSilence):
-    #         isSilence = False
-    #         begin = index
-    #     if (not isSilence):
-    #         if (last * 1.5 < each):
-    #             begin = index
-    #         if (each < threshhold1):
-    #             end = index
-    #             isSilence = True
-    #             segments.append(
-    #                 (begin * secondsNum / (frameNum + 0.0), end * secondsNum / (frameNum + 0.0)))
-    #     last = each
-
-    # for index, each in enumerate(spectralEntropy):
-    #     if (last * 1.5 < each):
-    #         pitch = 
-
-    #     last = each
-
-    # for each in segments:
-    #     seg.write(str(each[0]) + " " + str(each[1]))
-    #     seg.write("\n")
 
     lastSeg = (0, 0)
     for each in lastWords:

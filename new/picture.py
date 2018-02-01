@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 
 
 def main():
-    aF = AudioFeature("../bjehp.wav")
+    aF = AudioFeature("../pndgmcsy.wav")
     energy = aF.energy
     spectralEntropy = aF.spectralEntropy
     zcr = aF.zcr
@@ -25,7 +25,8 @@ def main():
     plt.ylabel('Spectral Flux')
 
     plt.subplot(2, 1, 2)
-    plt.plot(xlabels, energy, 'r-o')
+    plt.plot(energy)
+    # plt.plot(xlabels, energy, 'r-o')
     plt.xlabel('Frame no')
     plt.ylabel('Energy')
     plt.show()

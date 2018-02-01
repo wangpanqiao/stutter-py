@@ -3,12 +3,13 @@ from pydub import AudioSegment
 import matplotlib.pyplot as plt
 
 # 242577
-threshhold1 = 0.002
+threshhold1 = 0.005
 threshhold2 = 0.01
 
 sentences = []
+lastWords = []
 
-def getSentence(energy):
+def getSentence(energy, frameNum, secondsNum):
     isSilence = True
     for index, each in enumerate(energy):
         if (each > threshhold2 and isSilence):
@@ -23,9 +24,25 @@ def getSentence(energy):
                     isSilence = True
                     end = last
                     sentences.append((begin, end))
-                    print((begin, end))
+                    # print((begin * secondsNum / (frameNum + 0.0), end * secondsNum / (frameNum + 0.0)))
 
+def isTremendousRise(seq, threshhold):
+    if (seq[0] < seq[1] - threshhold and seq[1] < seq[2] - threshhold):
+        return True
+    else:
+        return False
 
+def getLastWordSeg(energy, frameNum, secondsNum, begin, end):
+    sentence = energy[begin:end]
+    for index, each in enumerate(sentence):
+        # at least 30
+        reversedIndex = len(sentence) - 30 - index
+        if (reversedIndex < 0):
+            return
+        seq = sentence[reversedIndex:reversedIndex+3]
+        if (isTremendousRise(seq, 0.008)):
+            lastWords.append(( (end - index - 30) * secondsNum / (frameNum + 0.0), end * secondsNum / (frameNum + 0.0)))
+            break
 
 def main():
     aF = AudioFeature("../pndgmcsy.wav")
@@ -48,7 +65,10 @@ def main():
     tail = 0
     newsong = song[0]
 
-    getSentence(energy)
+    getSentence(energy, frameNum, secondsNum)
+
+    for each in sentences:
+        getLastWordSeg(energy, frameNum, secondsNum, each[0], each[1])
 
     # for index, each in enumerate(energy):
     #     if (each > threshhold2 and isSilence):
@@ -74,18 +94,15 @@ def main():
     #     seg.write(str(each[0]) + " " + str(each[1]))
     #     seg.write("\n")
 
-    # lastSeg = (0, 0)
-    # for each in segments:
-    #     if (each[0] > lastSeg[1] + 1 and lastSeg[1] - lastSeg[0] > 0.7):
-    #         print (str(lastSeg[0]) + " " + str(lastSeg[1]))
-    #         begin = int(lastSeg[0] * 1000)
-    #         end = int(lastSeg[1] * 1000)
-    #         newsong = newsong + song[tail:begin]
-    #         newsong = newsong + song[begin:end].speedup(playback_speed=3) * 3
-    #         tail = end
-    #     lastSeg = (each[0], each[1])
-    # newsong = newsong + song[tail + 1:]
-    # newsong.export("newpndgmcsy.wav", format="wav")
+    lastSeg = (0, 0)
+    for each in lastWords:
+        begin = int(each[0] * 1000)
+        end = int(each[1] * 1000)
+        newsong = newsong + song[tail:begin]
+        newsong = newsong + song[begin:end].speedup(playback_speed=3) * 3
+        tail = end
+    newsong = newsong + song[tail + 1:]
+    newsong.export("newpndgmcsy.wav", format="wav")
 
     # plt.subplot(2,1,2); plt.plot(aF.energy); plt.xlabel('Frame no'); plt.ylabel('Energy'); plt.show()
 

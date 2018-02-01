@@ -10,7 +10,9 @@ class AudioFeature:
             x, Fs, 0.10 * Fs, 0.025 * Fs)
 
         self.energy = F[1, :]
-        self.spectralEntropy = F[4, :]
+        self.spectralEntropy = F[5, :]
+        self.spectralCentroid = F[3, :]
+        self.spectralFlux = F[6, :]
         self.zcr = F[0, :]
         self.Fs = Fs
         self.x = x

@@ -30,10 +30,11 @@ def getSentence(energy):
 def main():
     aF = AudioFeature("../pndgmcsy.wav")
     energy = aF.energy
-    spectralEntropy = aF.spectralEntropy
+
     frameNum = len(energy)
     secondsNum = len(aF.x) / 44100
 
+    # pydub
     song = AudioSegment.from_wav("../pndgmcsy.wav")
     number_of_frames_in_sound = song.frame_count()
 
